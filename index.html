@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OV-Transit</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans">
+
+  <!-- Header / Navigation (White Style) -->
+  <header class="bg-white text-slate-800 border-b border-gray-200 shadow-sm sticky top-0 z-50 w-full">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('home-view')">
+        <i class="fa-solid fa-bus text-2xl text-emerald-700"></i>
+        <span class="text-2xl font-bold font-serif tracking-tight text-emerald-800">OV-Transit</span>
+      </div>
+
+      <!-- Header Search bar -->
+      <div class="flex-1 max-w-md relative">
+        <div class="relative">
+          <input type="text" id="global-search" oninput="handleGlobalSearch(this.value)" placeholder="Zoek lijn (bijv. 1, 24) of station..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
+        </div>
+        <!-- Search Quick Dropdown -->
+        <div id="search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-80 overflow-y-auto"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->   
+<main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 pt-20">    
+    <!-- HOMEPAGE VIEW -->
+    <div id="home-view" class="view-content space-y-6">
+      
+      <!-- Welcome Section -->
+      <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h1 class="text-2xl font-serif font-bold text-gray-800 pb-2 mb-3 wiki-border">
+          Welkom bij OV-Transit!
+        </h1>
+        <p class="text-gray-700 leading-relaxed">
+          OV-Transit is een wiki voor openbaar vervoer, gericht op het verstrekken van gedetailleerde en betrouwbare informatie over bus-, trein-, tram-, metro- en veerdiensten in heel Nederland. De wiki bevat routes, frequenties, dienstregelingen en actuele verstoringen om reizigers te helpen bij het plannen van hun reis. OvNederland maakt deel uit van een groter platform voor het Nederlandse openbaar vervoer en wordt onderhouden door een selecte groep om de nauwkeurigheid te garanderen.
+        </p>
+      </section>
+
+      <!-- Quick Search Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Route Searchup Card -->
+        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-serif font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-route text-emerald-600"></i> Route Searchup
+          </h2>
+          <div class="relative mb-4">
+            <input type="text" id="route-input" onkeyup="filterRoutes()" placeholder="Zoek op lijnnummer of route..." class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div id="routes-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+        </div>
+
+        <!-- Station Searchup Card -->
+        <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-serif font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-location-dot text-emerald-600"></i> Station Searchup
+          </h2>
+          <div class="relative mb-4">
+            <input type="text" id="station-input" onkeyup="filterStations()" placeholder="Zoek op station of halte..." class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+          <div id="stations-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+        </div>
+      </div>
+
+      <!-- Special Events -->
+      <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h2 class="text-xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">
+          Speciale evenementen in Nederland
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <span class="font-bold text-gray-900">Keukenhof:</span>
+            <span class="text-gray-700"> Experience the ultimate Dutch icon at Keukenhof. Explore 32 hectares of spectacular floral displays, featuring more than 800 varieties of tulips. Don't miss your chance to walk through the 'Garden of Europe'—an unforgettable explosion of color and fragrance.</span>
+          </div>
+          <div>
+            <span class="font-bold text-gray-900">Koning:</span>
+            <span class="text-gray-700"> Experience the ultimate Dutch celebration on King's Day. Join millions of people in a vibrant sea of orange as the entire nation transforms into the world's largest street party. From the legendary 'vrijmarkt' flea markets to the festive boat parades on the canals, don't miss your chance to be part of this unforgettable explosion of music, joy, and Dutch tradition.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Travel Guide -->
+      <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h2 class="text-xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">
+          How to Travel in Netherlands?
+        </h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+          <li>You can use your contactless international debit or credit card (Visa, Mastercard, Maestro) or your smartphone/smartwatch (Apple Pay/Google Wallet) to check in and out.</li>
+          <li>The OV-chipkaart is currently being phased out to make way for more modern payment methods. It is scheduled to be fully replaced by OVpay at the end of 2027.</li>
+        </ul>
+      </section>
+
+      <!-- Quick Links -->
+      <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h2 class="text-xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">
+          Quick Links
+        </h2>
+        <ul class="space-y-2 text-emerald-700 font-medium">
+          <li><a href="#" class="hover:underline flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Admins</a></li>
+          <li><a href="#" class="hover:underline flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Tickets</a></li>
+          <li><a href="mailto:ayush.electroline@gmail.com" class="hover:underline flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs"></i> Question? Email us at ayush.electroline@gmail.com</a></li>
+        </ul>
+      </section>
+    </div>
+
+   <!-- ROUTE DETAIL VIEW -->
+    <div id="route-detail-view" class="view-content hidden space-y-6">
+      <button onclick="showView('home-view')" class="inline-flex items-center gap-2 text-emerald-700 font-medium hover:underline mb-2">
+        <i class="fa-solid fa-arrow-left"></i> Terug naar home
+      </button>
+
+      <!-- Desktop Layout: Left side for Stops/Updates, Right side for Info Box -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        <!-- LEFT COLUMN: Route Information (Haltes & Lijn Updates) -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Haltes Section -->
+          <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <h2 class="text-2xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">
+              Haltes
+            </h2>
+            <div id="route-stops-list" class="space-y-3"></div>
+          </section>
+
+          <!-- Lijn Updates Section -->
+          <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <h2 class="text-xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">
+              Lijn Updates
+            </h2>
+            <ul id="route-updates-list" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Bus Information Box & Image -->
+        <div class="space-y-6 lg:sticky lg:top-20">
+          <div class="bg-white rounded-lg border border-gray-300 shadow-sm overflow-hidden text-sm">
+            <!-- Header bar with Hex Color -->
+            <div id="infobox-header" class="px-4 py-2 font-bold text-white text-center text-lg flex items-center justify-center gap-2">
+              <span id="infobox-title">Lijn 1</span>
+            </div>
+
+            <!-- Details Table -->
+            <table class="w-full text-left border-collapse">
+              <tbody class="divide-y divide-gray-200">
+                <tr>
+                  <th class="py-2.5 px-3 font-semibold text-gray-700 bg-gray-50 w-2/5">Vervoerder(s)</th>
+                  <td id="infobox-operator" class="py-2.5 px-3 text-gray-800">Qbuzz</td>
+                </tr>
+                <tr>
+                  <th class="py-2.5 px-3 font-semibold text-gray-700 bg-gray-50">Concessie</th>
+                  <td id="infobox-concession" class="py-2.5 px-3 text-gray-800">Zuid-Holland-Noord</td>
+                </tr>
+                <tr>
+                  <th class="py-2.5 px-3 font-semibold text-gray-700 bg-gray-50">Lijnsoort</th>
+                  <td id="infobox-type" class="py-2.5 px-3 text-gray-800">Stadsbus</td>
+                </tr>
+                <tr>
+                  <th class="py-2.5 px-3 font-semibold text-gray-700 bg-gray-50">Rijdt sinds</th>
+                  <td id="infobox-since" class="py-2.5 px-3 text-gray-800">15 december 2024</td>
+                </tr>
+                <tr>
+                  <th class="py-2.5 px-3 font-semibold text-gray-700 bg-gray-50">Voorganger(s)</th>
+                  <td id="infobox-predecessor" class="py-2.5 px-3 text-gray-800">1, 4</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Frequencies Subheader -->
+            <div class="bg-blue-50 px-4 py-1.5 font-bold text-slate-800 text-center border-t border-b border-gray-200">
+              Frequencies
+            </div>
+            
+            <table class="w-full text-left border-collapse">
+              <tbody id="infobox-frequencies" class="divide-y divide-gray-200"></tbody>
+            </table>
+
+            <!-- Vehicle / Route Image Preview -->
+            <div class="p-3 border-t border-gray-200 bg-gray-50">
+              <div class="border border-gray-300 rounded overflow-hidden bg-white">
+                <img id="infobox-img" src="" alt="Route preview" class="w-full h-44 object-cover">
+                <div class="p-2 text-xs text-gray-600 flex justify-between items-center border-t border-gray-100">
+                  <span id="infobox-img-caption">Buslijn bij Station</span>
+                  <i class="fa-regular fa-clone text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STATION DETAIL VIEW -->
+    <div id="station-detail-view" class="view-content hidden space-y-6">
+      <button onclick="showView('home-view')" class="inline-flex items-center gap-2 text-emerald-700 font-medium hover:underline mb-2">
+        <i class="fa-solid fa-arrow-left"></i> Terug naar home
+      </button>
+
+      <section class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h1 id="station-detail-title" class="text-2xl font-serif font-bold text-gray-800 pb-2 mb-4 wiki-border">Station Detail</h1>
+        <h3 class="text-lg font-semibold mb-3">Lijnen die stoppen op deze locatie:</h3>
+        <div id="station-detail-lines" class="space-y-3"></div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-4 mt-8">
+    <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
+      OV-Transit (© All rights reserved.)
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
